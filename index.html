@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Disney · Registro magico</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+    :root {--azul:#17285f;--violeta:#6e54bc;--rosa:#ff79bd;--claro:#fdf7ff;--oro:#ffcc6e;}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:'Nunito',Arial,sans-serif;color:var(--azul);background:radial-gradient(circle at 10% 12%,#fff5bc 0 3%,transparent 15%),radial-gradient(circle at 88% 32%,#ffd9f1 0 2%,transparent 18%),linear-gradient(135deg,#e8ddff,#fde6f6 45%,#dceaff);padding:28px 18px 65px}
+    .estrellas{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:-1;background-image:radial-gradient(#fff 2px,transparent 3px),radial-gradient(#b79bec 1.5px,transparent 3px);background-size:108px 108px,157px 157px;background-position:13px 18px,78px 40px}
+    .contenedor{max-width:1020px;margin:auto}
+    .hero{text-align:center;color:white;padding:34px 20px 30px;border-radius:30px 30px 12px 12px;background:linear-gradient(115deg,#384aa7,#8063c8 54%,#d978b0);box-shadow:0 14px 35px #5f4c8b38;position:relative;overflow:hidden}
+    .hero:before,.hero:after{content:'';position:absolute;color:#ffdc96;font-size:30px;opacity:.75}.hero:before{left:20px;top:25px}.hero:after{right:22px;bottom:20px}
+    .castillo{font-size:66px;line-height:1.1;filter:drop-shadow(0 7px 8px #28195542)}
+    h1{font-size:clamp(25px,4vw,42px);margin:8px 0 4px;font-weight:900} .hero p{margin:0;font-size:16px}
+    .tarjeta{background:#ffffffed;border:2px solid white;border-radius:0 0 28px 28px;box-shadow:0 18px 45px #5f4c8b25;padding:28px}
+    .subtitulo{text-align:center;font-size:22px;color:#62479d;font-weight:900;margin:0 0 20px}
+    .campos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px 22px}
+    .campo label{display:block;font-weight:800;font-size:14px;margin-bottom:7px;color:#493778}
+    .campo input,.campo select{width:100%;padding:12px 14px;border:2px solid #e1d7fa;background:#fdfbff;border-radius:13px;font:inherit;outline:none;transition:.2s}
+    .campo input:focus,.campo select:focus{border-color:#ad7add;box-shadow:0 0 0 4px #ad7add24}
+    .botones{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:26px}
+    button{font:800 14px 'Nunito',Arial,sans-serif;border:0;border-radius:13px;padding:12px 20px;cursor:pointer;color:white;background:#7358c4;box-shadow:0 5px 0 #49358d;transition:transform .15s,opacity .15s}
+    button:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.07)}
+    button:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+    #btnRegistrar{background:#e46ea9;box-shadow:0 5px 0 #a33b78}#btnConsultar{background:#447fca;box-shadow:0 5px 0 #25528c}#btnEliminar,.eliminar-fila{background:#d5577c;box-shadow:0 5px 0 #9b385a}
+    #estado{text-align:center;font-weight:800;min-height:26px;color:#62479d;margin:22px 0 0}
+    #seccionTabla{display:none;background:#fff;border-radius:25px;padding:22px;margin-top:25px;box-shadow:0 10px 35px #5f4c8b24}
+    #seccionTabla h2{color:#62479d;margin:0 0 10px}#buscador{padding:11px 13px;border:2px solid #dacef6;border-radius:12px;font:inherit;width:min(100%,350px);margin:18px 0}
+    .tabla-scroll{overflow-x:auto;border-radius:14px;border:1px solid #dfd3f6}
+    table{border-collapse:collapse;width:100%;min-width:1300px;font-size:13px}th,td{padding:12px;border-bottom:1px solid #e8e0f5;text-align:left;white-space:normal;min-width:92px}th{background:#6b56b7;color:#fff}tbody tr:nth-child(even){background:#f9f3ff}td button{padding:9px 12px;font-size:12px;margin:3px}
+    .pie{text-align:center;font-weight:700;color:#69568b;font-size:13px;margin:20px 0}
+    @media(max-width:650px){body{padding:12px 10px 35px}.tarjeta{padding:20px 14px}.campos{grid-template-columns:1fr}.hero{padding:28px 10px}.hero:before,.hero:after{font-size:17px}}
+  </style>
+</head>
+<body>
+<div aria-hidden="true" class="estrellas"></div>
+<main class="contenedor">
+<header class="hero">
+<h1>Mi mundo magico Disney</h1>
+<p>Donde los suenos y tus personajes favoritos cobran vida</p>
+</header>
+<section class="tarjeta">
+<h2 class="subtitulo">Formulario del reino encantado</h2>
+<form id="formulario">
+<input id="id" type="hidden"/>
+<div class="campos">
+<div class="campo">
+<label for="nombre">1. Nombre:</label>
+<input id="nombre" placeholder="Ej. Ariel" required="" type="text"/>
+</div>
+<div class="campo">
+<label for="edad">2. Edad:</label>
+<input id="edad" max="120" min="1" placeholder="Tu edad" required="" type="number"/>
+</div>
+<div class="campo">
+<label for="cargo">3. Rol en el reino Disney:</label>
+<select id="cargo" required="">
+<option disabled="" selected="" value="">Selecciona una opcion</option>
+<option value="Princesa o principe">Princesa o principe</option>
+<option value="Heroe o heroina">Heroe o heroina</option>
+<option value="Villano o villana">Villano o villana</option>
+<option value="Explorador o exploradora">Explorador o exploradora</option>
+<option value="Hada o mago">Hada o mago</option>
+</select>
+</div>
+<div class="campo">
+<label for="personaje">4. Personaje Disney favorito:</label>
+<select id="personaje" required="">
+<option disabled="" selected="" value="">Selecciona una opcion</option>
+<option value="Mickey Mouse">Mickey Mouse</option>
+<option value="Minnie Mouse">Minnie Mouse</option>
+<option value="Stitch">Stitch</option>
+<option value="Elsa">Elsa</option>
+<option value="Rapunzel">Rapunzel</option>
+</select>
+</div>
+<div class="campo">
+<label for="pelicula">5. Pelicula Disney favorita:</label>
+<select id="pelicula" required="">
+<option disabled="" selected="" value="">Selecciona una opcion</option>
+<option value="Frozen">Frozen</option>
+<option value="Enredados">Enredados</option>
+<option value="La sirenita">La sirenita</option>
+<option value="El rey leon">El rey leon</option>
+<option value="Moana">Moana</option>
+</select>
+</div>
+<div class="campo">
+<label for="princesa">6. Princesa o principe favorito:</label>
+<select id="princesa" required="">
+<option disabled="" selected="" value="">Selecciona una opcion</option>
+<option value="Ariel">Ariel</option>
+<option value="Bella">Bella</option>
+<option value="Cenicienta">Cenicienta</option>
+<option value="Rapunzel">Rapunzel</option>
+<option value="Tiana">Tiana</option>
+</select>
+</div>
+<div class="campo">
+<label for="villano">7. Villano Disney favorito:</label>
+<select id="villano" required="">
+<option disabled="" selected="" value="">Selecciona una opcion</option>
+<option value="Malefica">Malefica</option>
+<option value="Ursula">Ursula</option>
+<option value="Cruella de Vil">Cruella de Vil</option>
+<option value="Jafar">Jafar</option>
+<option value="Scar">Scar</option>
+</select>
+</div>
+<div class="campo">
+<label for="cancion">8. Cancion Disney favorita:</label>
+<select id="cancion" required="">
+<option disabled="" selected="" value="">Selecciona una opcion</option>
+<option value="Libre soy (Frozen)">Libre soy (Frozen)</option>
+<option value="Un mundo ideal (Aladdin)">Un mundo ideal (Aladdin)</option>
+<option value="Bajo el mar (La sirenita)">Bajo el mar (La sirenita)</option>
+<option value="Colores en el viento (Pocahontas)">Colores en el viento (Pocahontas)</option>
+<option value="No se habla de Bruno (Encanto)">No se habla de Bruno (Encanto)</option>
+</select>
+</div>
+<div class="campo">
+<label for="parque">9. Parque o atraccion sonada:</label>
+<select id="parque" required="">
+<option disabled="" selected="" value="">Selecciona un parque o atraccion</option>
+<option value="Disneyland California">Disneyland California</option>
+<option value="Magic Kingdom">Magic Kingdom</option>
+<option value="EPCOT">EPCOT</option>
+<option value="Hollywood Studios">Hollywood Studios</option>
+<option value="Animal Kingdom">Animal Kingdom</option>
+</select>
+</div>
+<div class="campo">
+<label for="poder">10. Poder magico que elegirias:</label>
+<select id="poder" required="">
+<option disabled="" selected="" value="">Selecciona una opcion</option>
+<option value="Volar">Volar</option>
+<option value="Invisibilidad">Invisibilidad</option>
+<option value="Controlar el agua">Controlar el agua</option>
+<option value="Hablar con animales">Hablar con animales</option>
+<option value="Teletransportarse">Teletransportarse</option>
+</select>
+</div>
+</div>
+<div class="botones">
+<button id="btnRegistrar" type="button">Registrar</button>
+<button id="btnConsultar" type="button">Consultar</button>
+<button id="btnModificar" type="button">Modificar</button>
+<button id="btnEliminar" type="button">Eliminar</button>
+</div>
+</form>
+<p aria-live="polite" id="estado" role="status"></p>
+</section>
+<section id="seccionTabla">
+<h2>Registros del reino</h2>
+<button id="btnCerrar" type="button">Cerrar tabla</button>
+<div><input id="buscador" placeholder="Buscar por nombre..." type="text"/></div>
+<div class="tabla-scroll"><table>
+<thead><tr>
+<th>Fecha</th>
+<th>Nombre</th>
+<th>Edad</th>
+<th>Rol en el reino Disney</th>
+<th>Personaje Disney favorito</th>
+<th>Pelicula Disney favorita</th>
+<th>Princesa o principe favorito</th>
+<th>Villano Disney favorito</th>
+<th>Cancion Disney favorita</th>
+<th>Parque o atraccion sonada</th>
+<th>Poder magico que elegirias</th>
+<th>Acciones</th>
+</tr></thead>
+<tbody id="tabla"></tbody>
+</table></div>
+</section>
+<p class="pie">La magia esta en cada historia</p>
+</main>
+<script>
+// IMPORTANTE: reemplaza esta URL con la de tu Apps Script (termina en /exec).
+const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwED04PfLpi-T4Fzezf3FTkgOQJAb-juHeVbQOqMJTHte45BX-qEF9mYKbMqJjHucnX/exec";
+const CAMPOS = ["nombre","edad","cargo","personaje","pelicula","princesa","villano","cancion","parque","poder"];
+let registros = [];
+let tablaVisible = false;
+let ocupado = false;
+const $ = id => document.getElementById(id);
+
+function configurado() {
+  if (!/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(URL_SCRIPT)) {
+    $('estado').textContent = 'Configura la URL de Apps Script que termina en /exec dentro del INDEX.';
+    return false;
+  }
+  return true;
+}
+
+// Consulta por JSONP: evita el problema de CORS entre GitHub Pages y Apps Script.
+function consultarServidor() {
+  return new Promise((resolve,reject) => {
+    if (!configurado()) { reject(new Error('Falta configurar la URL de Apps Script.')); return; }
+    const nombre = 'disneyCallback_' + Date.now() + '_' + Math.floor(Math.random()*100000);
+    const s = document.createElement('script');
+    let terminado = false;
+    const limpiar = () => { clearTimeout(timer); s.remove(); delete window[nombre]; };
+    window[nombre] = datos => { if (terminado) return; terminado = true; limpiar(); if (datos && datos.error) reject(new Error(datos.error)); else resolve(datos); };
+    s.onerror = () => { if (terminado) return; terminado = true; limpiar(); reject(new Error('No se pudo consultar Apps Script. Revisa la URL y los permisos.')); };
+    const timer = setTimeout(() => { if (terminado) return; terminado = true; limpiar(); reject(new Error('La consulta tardo demasiado. Revisa la implementacion de Apps Script.')); }, 15000);
+    s.src = URL_SCRIPT + (URL_SCRIPT.includes('?')?'&':'?') + 'callback=' + encodeURIComponent(nombre) + '&t=' + Date.now();
+    document.head.appendChild(s);
+  });
+}
+
+// Envio POST simple. Google Apps Script puede bloquear la lectura de la respuesta por CORS.
+// Por ello verificamos el resultado consultando los registros de nuevo.
+async function enviarYConfirmar(datos) {
+  if (!configurado()) throw new Error('Falta configurar Apps Script.');
+  const accion = datos.accion;
+  const id = String(datos.id);
+  const res = await fetch(URL_SCRIPT, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    body: new URLSearchParams(datos).toString()
+  });
+  // Una respuesta opaca NO demuestra que se haya guardado.
+  for (let intento=0; intento<4; intento++) {
+    await new Promise(r=>setTimeout(r, 850 + intento*500));
+    const actuales = await consultarServidor();
+    if (!Array.isArray(actuales)) throw new Error('La consulta no devolvio registros.');
+    const registro = actuales.find(r => String(r.id) === id);
+    if (accion==='eliminar' && !registro) return actuales;
+    if (accion==='guardar' && registro) return actuales;
+    if (accion==='editar' && registro && CAMPOS.every(c => String(registro[c] ?? '') === String(datos[c] ?? ''))) return actuales;
+  }
+  throw new Error('No se pudo confirmar el cambio en Google Sheets. Revisa Apps Script > Ejecuciones.');
+}
+
+function datosFormulario() {
+  const d={}; CAMPOS.forEach(c=>d[c]=$(c).value.trim()); return d;
+}
+function actualizarBotones() {
+  const hayRegistro = $('id').value !== '';
+  $('btnRegistrar').disabled = ocupado || hayRegistro;
+  $('btnModificar').disabled = ocupado || !hayRegistro;
+  $('btnEliminar').disabled = ocupado || !hayRegistro;
+  $('btnConsultar').disabled = ocupado;
+}
+function limpiarFormulario() {
+  $('formulario').reset(); $('id').value=''; actualizarBotones();
+}
+function estado(m) { $('estado').textContent=m; }
+function fallo(e) { estado('Error: ' + (e.message || e)); }
+async function ejecutar(tarea) {
+  if (ocupado) return;
+  ocupado=true; actualizarBotones();
+  try { await tarea(); } catch(e) { fallo(e); }
+  finally { ocupado=false; actualizarBotones(); }
+}
+async function refrescar() {
+  const datos=await consultarServidor();
+  if (!Array.isArray(datos)) throw new Error('Respuesta inesperada del servidor.');
+  registros=datos; mostrarTabla();
+}
+$('btnRegistrar').onclick = () => {
+  if (!$('formulario').reportValidity()) return;
+  ejecutar(async () => {
+    estado('Guardando...');
+    const id=String(Date.now())+'-'+Math.floor(Math.random()*1000000);
+    registros=await enviarYConfirmar({...datosFormulario(), accion:'guardar', id});
+    limpiarFormulario(); mostrarTabla(); estado('Registro guardado correctamente.');
+  });
+};
+$('btnConsultar').onclick = () => ejecutar(async () => {
+  estado('Consultando...'); await refrescar();
+  tablaVisible=true; $('seccionTabla').style.display='block'; estado('Registros cargados.');
+});
+function mostrarTabla() {
+  const filtro=$('buscador').value.trim().toLowerCase();
+  const tabla=$('tabla'); tabla.replaceChildren();
+  registros.forEach(reg => {
+    if (!String(reg.nombre||'').toLowerCase().startsWith(filtro)) return;
+    const tr=document.createElement('tr');
+    const fecha=reg.fecha ? new Date(reg.fecha) : null;
+    agregarCelda(tr,fecha && !isNaN(fecha.getTime()) ? fecha.toLocaleString('es-MX') : '');
+    CAMPOS.forEach(c=>agregarCelda(tr,reg[c] ?? ''));
+    const td=document.createElement('td');
+    const modificar=document.createElement('button');
+    modificar.textContent='Modificar registro'; modificar.type='button';
+    modificar.onclick=()=>cargarEnFormulario(reg);
+    const eliminarBtn=document.createElement('button');
+    eliminarBtn.textContent='Eliminar'; eliminarBtn.type='button'; eliminarBtn.className='eliminar-fila';
+    eliminarBtn.onclick=()=>eliminar(reg.id);
+    td.append(modificar,eliminarBtn);tr.append(td);tabla.append(tr);
+  });
+}
+function agregarCelda(tr, valor) {
+  const td=document.createElement('td'); td.textContent=String(valor);tr.append(td);
+}
+$('buscador').oninput=mostrarTabla;
+$('btnCerrar').onclick=()=>{
+  tablaVisible=false; $('seccionTabla').style.display='none';
+  $('buscador').value=''; $('tabla').replaceChildren();
+};
+function cargarEnFormulario(reg) {
+  $('id').value=String(reg.id);
+  CAMPOS.forEach(c=>$(c).value=reg[c] ?? '');
+  estado('Edita las respuestas y presiona Modificar.');
+  actualizarBotones(); window.scrollTo({top:0,behavior:'smooth'}); $('nombre').focus();
+}
+$('btnModificar').onclick=()=>{
+  if (!$('id').value || !$('formulario').reportValidity()) return;
+  ejecutar(async()=>{
+    estado('Modificando...');
+    const id=$('id').value;
+    registros=await enviarYConfirmar({...datosFormulario(),accion:'editar',id});
+    limpiarFormulario(); mostrarTabla(); estado('Registro modificado correctamente.');
+  });
+};
+$('btnEliminar').onclick=()=>eliminar($('id').value);
+function eliminar(id) {
+  if (!id || !confirm('Seguro que quieres eliminar este registro?')) return;
+  ejecutar(async()=>{
+    estado('Eliminando...'); registros=await enviarYConfirmar({accion:'eliminar',id:String(id)});
+    limpiarFormulario();mostrarTabla();estado('Registro eliminado correctamente.');
+  });
+}
+actualizarBotones();
+</script>
+</body>
+</html>
